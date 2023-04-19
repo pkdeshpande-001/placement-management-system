@@ -37,7 +37,6 @@ $(document).ready(function () {
                             var data = table.rows('.selected').data();
                             if(data[0]){
                                 updateInputBoxFromFireBase(data);
-                            
                             }
                         }
                     },
@@ -152,7 +151,9 @@ function openAddModelAndClose(data) {
     document.getElementById("editForm").style.display = "block";
     document.getElementById("tableBox").style.display = "none";
     
-
+    document.getElementById('saveUpdateCustomer').addEventListener('click', () => {
+        addCustomerToDataBase()
+    })
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = function (event) {
         if (event.target == document.getElementById("editForm")) {
@@ -219,7 +220,7 @@ function updateStudentToDataBase(key,offer){
       );
 }
 
- function addCustomerToDataBase(key){
+ function addCustomerToDataBase(){
     var inputUsn = document.getElementById("inputUsn").value;
     var inputStudentName = document.getElementById("inputStudentName").value;
     var inputCompany = document.getElementById("inputCompany").value;
