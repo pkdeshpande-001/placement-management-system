@@ -94,12 +94,12 @@ function ShowData() {
                 if(campus === 'OFF' && i!== companies.length - 1){
                     // console.log(campus)
                     companyHtmlOff  += "<td style='border-bottom: 1px solid black;border-right:1px solid ; border-collapse: collapse;'>"+ company +"</td>";
-                    offerHtmlOff +=  "<td style='border-right:1px solid ;''><a href='"+offer+"'>"+offer+"</a></td>";
+                    offerHtmlOff +=  "<td style='border-right:1px solid ;''><a href='"+offer+"'>"+"offer"+"</a></td>";
                 }
                 if(campus === 'OFF' && i== companies.length - 1){
                     // console.log(campus)
                     companyHtmlOff  += "<td style='border-bottom: 1px solid black; border-collapse: collapse;'>"+ company +"</td>";
-                    offerHtmlOff +=  "<td style='border: none ''><a href='"+offer+"'>"+offer+"</a></td>";
+                    offerHtmlOff +=  "<td style='border: none ''><a href='"+offer+"'>"+"offer"+"</a></td>";
                 }
                 // console.log("Company: " + company);
                 // console.log("Offer: " + offer);
