@@ -89,7 +89,7 @@ function ShowData() {
                 if(campus === 'ON' && i== companies.length - 1){
                     // console.log(campus)
                     companyHtmlOn  += "<td style='border-bottom: 1px solid black; border-collapse: collapse;''>"+ company +"</td>";
-                    offerHtmlOn +=  "<td style='border: none ''><a href='"+offer+"'>"+offer+"</a></td>";
+                    offerHtmlOn +=  "<td style='border: none ''><a href='"+offer+"'>"+"offer"+"</a></td>";
                 }
                 if(campus === 'OFF' && i!== companies.length - 1){
                     // console.log(campus)
