@@ -27,6 +27,7 @@ function saveAddCustomer(){
         firebase.database().ref('PlacementStudent/'+key).set({
           usn: inputUsn,
           studentName: inputStudentName,
+          key:key,
           company:inputCompany,
           offer: offerUrl,
           campus: inputOnOffCampus,

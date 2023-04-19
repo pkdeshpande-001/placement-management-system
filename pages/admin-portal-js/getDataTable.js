@@ -9,6 +9,7 @@ var data = [
     // {'usn':'2BA17IS046', 'name':'Prathamesh', 'company':'Tech Mahindra', 'offer':'TECHOfferleter','campus':'on campus'}
   ];
   var passoutYear = localStorage.getItem('passoutYear')
+  document.getElementById("year").innerHTML = passoutYear
 firebase.database().ref('PlacementStudent').once('value', function (snapshot) {
     snapshot.forEach(function (childSnapshot) {
         var childKey = childSnapshot.key;
@@ -80,22 +81,22 @@ function ShowData() {
                 if(campus === 'ON' && i!== companies.length - 1){
                     // console.log(campus)
                     companyHtmlOn  += "<td style='border-bottom: 1px solid black;border-right:1px solid ; border-collapse: collapse;'>"+ company +"</td>";
-                    offerHtmlOn +=  "<td style='border-right:1px solid ;''><a href='"+offer+"'>"+'offer'+"</a></td>";
+                    offerHtmlOn +=  "<td style='border-right:1px solid ;''><a href='"+offer+"' target='_blank'>"+'offer_Letter'+"</a></td>";
                 }
                 if(campus === 'ON' && i== companies.length - 1){
                     // console.log(campus)
                     companyHtmlOn  += "<td style='border-bottom: 1px solid black; border-collapse: collapse;''>"+ company +"</td>";
-                    offerHtmlOn +=  "<td style='border: none ''><a href='"+offer+"'>"+"offer"+"</a></td>";
+                    offerHtmlOn +=  "<td style='border: none ''><a href='"+offer+"' target='_blank'>"+"offer_Letter"+"</a></td>";
                 }
                 if(campus === 'OFF' && i!== companies.length - 1){
                     // console.log(campus)
                     companyHtmlOff  += "<td style='border-bottom: 1px solid black;border-right:1px solid ; border-collapse: collapse;'>"+ company +"</td>";
-                    offerHtmlOff +=  "<td style='border-right:1px solid ;''><a href='"+offer+"'>"+"offer"+"</a></td>";
+                    offerHtmlOff +=  "<td style='border-right:1px solid ;''><a href='"+offer+"' target='_blank'>"+"offer_Letter"+"</a></td>";
                 }
                 if(campus === 'OFF' && i== companies.length - 1){
                     // console.log(campus)
                     companyHtmlOff  += "<td style='border-bottom: 1px solid black; border-collapse: collapse;'>"+ company +"</td>";
-                    offerHtmlOff +=  "<td style='border: none ''><a href='"+offer+"'>"+"offer"+"</a></td>";
+                    offerHtmlOff +=  "<td style='border: none ''><a href='"+offer+"' target='_blank'>"+"offer_Letter"+"</a></td>";
                 }
                 // console.log("Company: " + company);
                 // console.log("Offer: " + offer);

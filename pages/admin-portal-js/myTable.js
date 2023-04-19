@@ -1,4 +1,4 @@
-var objCustData ;
+var objCustData  = [];
 
 $(document).ready(function () {
 
@@ -9,6 +9,7 @@ $(document).ready(function () {
         $(this).html( '<input type="text" placeholder="search '+title+'"class="form-control" data-index="'+i+'" />' );
     });
 
+    var data = []
    
 
 
@@ -22,7 +23,7 @@ $(document).ready(function () {
         searching: true,
         dom: 'Blfrtip',
         buttons: [
-                    'pdf','csv','xlsx',
+                    'pdf','csv',
                     {
                         text: 'Add',
                         action: function ( e, dt, node, config) {
@@ -31,23 +32,21 @@ $(document).ready(function () {
                             }
                     },
                     {
+                    text: 'Edit',
+                    action: function ( e, dt, node, config) {
+                            var data = table.rows('.selected').data();
+                            if(data[0]){
+                                updateInputBoxFromFireBase(data);
+                            
+                            }
+                        }
+                    },
+                    {
                         text: 'Reload',
                         action: function ( e, dt, node, config ) {
                             dt.ajax.reload();
                         }
-                    },
-                    
-                    // {
-                    // text: 'Edit',
-                    // action: function ( e, dt, node, config) {
-                    //         var data = table.rows('.selected').data();
-                            
-                    //         if(data[0]!==undefined){
-                    //            openEditModelAndClose(data);
-                            
-                    //         }
-                    //     }
-                    // },
+                    }
                 ],
         columns: [
             { 
@@ -78,11 +77,20 @@ $(document).ready(function () {
                 localStorage.setItem('passoutYear',pass)
                 
                 for ( var i=0; i<data.length; i++ ) {
+                    var obj = {}
                     var fullData = []
                     var innerData = data[i]
+                    obj.usn = innerData['usn']
+                    obj.studentName = innerData['studentName']
+                    obj.company = innerData['company']
+                    obj.offer = innerData['offer']
+                    obj.campus = innerData['campus']
+                    obj.passoutYear = innerData['passoutYear']
+                    obj.key = innerData['key']
+                    objCustData.push(obj)
+
                     if(innerData['passoutYear'] == pass || pass === 'All'){
 
-                    console.log(innerData['usn'])
                         
                     fullData.push(innerData['usn'])
                     fullData.push(innerData['studentName'])
@@ -93,7 +101,6 @@ $(document).ready(function () {
                     CollectRecord.push(fullData) 
                 }
                }  
-               console.log(CollectRecord)
             
                       
                    return CollectRecord;
@@ -118,16 +125,16 @@ $(document).ready(function () {
         $(
             "<select  class='' style='width:130px;height: 40px;' id='year' >" +
                               "<option>All</option>"+
-                             " <option>2017-2018</option>"+
-                              "<option>2018-2019</option>"+
-                              "<option>2019-2020</option>"+
-                              "<option>2020-2021</option>"+
-                              "<option>2021-2022</option>"+
-                              "<option>2022-2023</option>"+
-                              "<option>2023-2024</option>"+
-                              "<option>2024-2025</option>"+
-                              "<option>2025-2026</option>"+
-                              "<option>2028-2027</option>"+
+                              "<option id='2017-2018'>2017-2018</option>"+
+                              "<option id='2018-2019'>2018-2019</option>"+
+                              "<option id='2019-2020'>2019-2020</option>"+
+                              "<option id='2020-2021'>2020-2021</option>"+
+                              "<option id='2021-2022'>2021-2022</option>"+
+                              "<option id='2022-2023'>2022-2023</option>"+
+                              "<option id='2023-2024'>2023-2024</option>"+
+                              "<option id='2024-2025'>2024-2025</option>"+
+                              "<option id='2025-2026'>2025-2026</option>"+
+                              "<option id='2028-2027'>2028-2027</option>"+
               "</select>"
                 ).appendTo("#example_wrapper .flex-wrap");
         
@@ -144,12 +151,6 @@ var close1 = document.getElementById("close");
 function openAddModelAndClose(data) {
     document.getElementById("editForm").style.display = "block";
     document.getElementById("tableBox").style.display = "none";
-
-   
-
-    document.getElementById('saveUpdateCustomer').addEventListener('click', () => {
-        addCustomerToDataBase();
-    })
     
 
     // When the user clicks anywhere outside of the modal, close it
@@ -166,38 +167,57 @@ function cancle(){
     document.getElementById("tableBox").style.display = "block";
 }
 
-// function addInputBoxFromFireBase(){
-//     // console.log(data)
-//     // console.log(objCustData)
-//     const custObject = objCustData.find(obj => obj.shopname === data[0]);
-//     console.log(custObject)
-//     document.getElementById("inputShopName").value = custObject.shopname;
-//     document.getElementById("inputFirstName").value =custObject.firstname;
-//     document.getElementById("inputLastName").value = custObject.lastname;
-//     document.getElementById("inputGstNo").value = custObject.gstno;
-//     document.getElementById("inputEmailAddress").value = custObject.emailAddress;
-//     document.getElementById("inputPhone").value = custObject.phonenumber;
-//     document.getElementById("latandlong").value = custObject.locationCoords;
-//     document.getElementById("googleMapAddress").value = custObject.googleMapAddress;
-//     document.getElementById("address").value = custObject.locationAddress;
-//     var latsAndLongs = custObject.locationCoords.split(',')
-//     var myLatlng = new google.maps.LatLng(latsAndLongs[0],latsAndLongs[1]);
-//     markOnMapAndDragable(myLatlng)
-//     document.getElementById('saveUpdateCustomer').addEventListener('click', () => {
-//         updateCustomer(custObject.key);
-//     });
+function updateInputBoxFromFireBase(data){
+    document.getElementById("editForm").style.display = "block";
+    document.getElementById("tableBox").style.display = "none";
+    window.onclick = function (event) {
+        if (event.target == document.getElementById("editForm")) {
+            document.getElementById("editForm").style.display = "none";
+            document.getElementById("tableBox").style.display = "block";
+        }
+    };
+    var data1 = data[0]
+    document.getElementById("inputUsn").value = data1[0];
+    document.getElementById("inputStudentName").value = data1[1];
+    document.getElementById("inputCompany").value = data1[2];
+    console.log(data1[4])
+    document.getElementById("inputOnOffCampus").options.namedItem(""+data1[4]+"").selected = true;
+    document.getElementById("inputOnOffCampus").value = data1[4];
+    document.getElementById("inutSelectPassoutYear").options.namedItem(""+data1[5]+"").selected = true ;
+    document.getElementById("inutSelectPassoutYear").value = data1[5];
+    const custObject = objCustData.find(obj => obj.usn === data1[0] && obj.company === data1[2] && obj.campus === data1[4] && obj.passoutYear == data1[5] );
+        // updateStudent(custObject.key);
+        // console.log(custObject.key)
+        document.getElementById('saveUpdateCustomer').addEventListener('click', () => {
+            updateStudentToDataBase(custObject.key,custObject.offer);
+        })
     
-// }
+}
 
-function ExportToExcel(type, fn, dl) {
-    // var elt = document.getElementById('example');
-    // var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
-    // return dl ?
-    //   XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
-    //   XLSX.writeFile(wb, fn || ('CustomerList.' + (type || 'xlsx')));
+function updateStudentToDataBase(key,offer){
+    var inputUsn = document.getElementById("inputUsn").value;
+    var inputStudentName = document.getElementById("inputStudentName").value;
+    var inputCompany = document.getElementById("inputCompany").value;
+    var inputOfferLetter = document.getElementById("inputOfferLetter").files[0] === undefined ? offer : document.getElementById("inputOfferLetter").files[0];
+    var inputOnOffCampus = document.getElementById("inputOnOffCampus").value;
+    var inutSelectPassoutYear = document.getElementById("inutSelectPassoutYear").value;
 
-    
- }
+    console.log(key)
+
+    firebase.database().ref().child("PlacementStudent/" + key).update({
+        usn: inputUsn,
+        studentName: inputStudentName,
+        offer: inputOfferLetter,
+        key:key,
+        company:inputCompany,
+        campus: inputOnOffCampus,
+        passoutYear: inutSelectPassoutYear
+      }).then(
+        alert('Updated Successfully.\nPlease click on reload button above the table'),
+        document.getElementById("editForm").style.display = "none",
+        document.getElementById("tableBox").style.display = "block"
+      );
+}
 
  function addCustomerToDataBase(key){
     var inputUsn = document.getElementById("inputUsn").value;
@@ -230,6 +250,7 @@ function ExportToExcel(type, fn, dl) {
             usn: inputUsn,
             studentName: inputStudentName,
             company:inputCompany,
+            key:key,
             offer: offerUrl,
             campus: inputOnOffCampus,
             passoutYear: inutSelectPassoutYear
@@ -240,16 +261,6 @@ function ExportToExcel(type, fn, dl) {
             
   });
     
-    // firebase.database().ref().child("Customers/" + key).update({
-    //     usn: inputUsn,
-    //     studentName: inputStudentName,
-    //     offer: inputOfferLetter,
-    //     campus: inputOnOffCampus,
-    //     passoutYear: inutSelectPassoutYear
-    //   }).then(
-    //     alert('Updated Successfully.\nPlease click on reload button above the table'),
-    //     document.getElementById("editForm").style.display = "none",
-    //     document.getElementById("tableBox").style.display = "block"
-    //   );
+    
     
 }
