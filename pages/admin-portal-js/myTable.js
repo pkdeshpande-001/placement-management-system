@@ -3,17 +3,15 @@ var objCustData ;
 $(document).ready(function () {
 
     var data = [
-        ['2BA19IS055', 'David', 'TCS', 'something','on campus','2020-2021'],
-        ['2BA19IS059', 'David', 'COGNI', 'something','on campus','2020-2021'],
-        // ['2BA19IS057', 'Alex', 'TECH Mahindra', 'something','on campus'],
-        // ['2BA19IS057', 'Alex', 'TCS', 'something','off campus'],
-        // ['2BA19IS057', 'Alex', 'COGNI', 'something','off campus'],
-        // ['2BA19IS060', 'TOM', 'AMD', 'something','on campus'],
       ];
       $('#example tfoot th').each( function (i) {
         var title = $('#example thead th').eq( $(this).index() ).text();
         $(this).html( '<input type="text" placeholder="search '+title+'"class="form-control" data-index="'+i+'" />' );
     });
+
+   
+
+
       var table=  $('#example').DataTable({
         processing: true,
         // fixedHeader: true,
@@ -26,18 +24,19 @@ $(document).ready(function () {
         buttons: [
                     'pdf','csv','xlsx',
                     {
-                        text: 'Reload',
-                        action: function ( e, dt, node, config ) {
-                            dt.ajax.reload();
-                        }
-                    },
-                    {
                         text: 'Add',
                         action: function ( e, dt, node, config) {
                                 
                                 openAddModelAndClose(data);
                             }
-                        },
+                    },
+                    {
+                        text: 'Reload',
+                        action: function ( e, dt, node, config ) {
+                            dt.ajax.reload();
+                        }
+                    },
+                    
                     // {
                     // text: 'Edit',
                     // action: function ( e, dt, node, config) {
@@ -60,7 +59,6 @@ $(document).ready(function () {
                 title: 'Student Name'
             },
             { title: 'Company' },
-            // { title: 'Company' },
             { 
                 title: 'offer letter',
                 "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
@@ -76,10 +74,14 @@ $(document).ready(function () {
                 
                 var data = Object.values(data);
                 var CollectRecord = []
+                var pass = document.getElementById("year").value;
+                localStorage.setItem('passoutYear',pass)
                 
                 for ( var i=0; i<data.length; i++ ) {
                     var fullData = []
                     var innerData = data[i]
+                    if(innerData['passoutYear'] == pass || pass === 'All'){
+
                     console.log(innerData['usn'])
                         
                     fullData.push(innerData['usn'])
@@ -89,6 +91,7 @@ $(document).ready(function () {
                     fullData.push(innerData['campus'])
                     fullData.push(innerData['passoutYear'])
                     CollectRecord.push(fullData) 
+                }
                }  
                console.log(CollectRecord)
             
@@ -112,6 +115,23 @@ $(document).ready(function () {
                 .search( this.value )
                 .draw();
         } );
+        $(
+            "<select  class='' style='width:130px;height: 40px;' id='year' >" +
+                              "<option>All</option>"+
+                             " <option>2017-2018</option>"+
+                              "<option>2018-2019</option>"+
+                              "<option>2019-2020</option>"+
+                              "<option>2020-2021</option>"+
+                              "<option>2021-2022</option>"+
+                              "<option>2022-2023</option>"+
+                              "<option>2023-2024</option>"+
+                              "<option>2024-2025</option>"+
+                              "<option>2025-2026</option>"+
+                              "<option>2028-2027</option>"+
+              "</select>"
+                ).appendTo("#example_wrapper .flex-wrap");
+        
+         $(".flex-wrap").addClass("pull-right");
     
 });
 

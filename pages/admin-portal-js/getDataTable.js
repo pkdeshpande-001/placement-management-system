@@ -8,18 +8,20 @@ var data = [
     // {'usn':'2BA17IS044', 'name':'Praneet', 'company':'TCS', 'offer':'TCSOfferleter','campus':'on campus'},
     // {'usn':'2BA17IS046', 'name':'Prathamesh', 'company':'Tech Mahindra', 'offer':'TECHOfferleter','campus':'on campus'}
   ];
-
+  var passoutYear = localStorage.getItem('passoutYear')
 firebase.database().ref('PlacementStudent').once('value', function (snapshot) {
     snapshot.forEach(function (childSnapshot) {
         var childKey = childSnapshot.key;
         var childData = childSnapshot.val();
         var obj = {}
+       if(passoutYear == childData.passoutYear || passoutYear == "All"){
         obj.usn = childData.usn,
         obj.name = childData.studentName,
         obj.company = childData.company,
         obj.offer = childData.offer,
         obj.campus = childData.campus,
         data.push(obj)
+       }
 
     });
 }).then(() => {
@@ -27,7 +29,6 @@ firebase.database().ref('PlacementStudent').once('value', function (snapshot) {
     
 })
 
-    console.log(data)
     document.getElementById('click1').addEventListener('click',()=>{
     
         var o = {
@@ -52,7 +53,6 @@ function ShowData() {
             campus: item.campus
         });
     });
-    console.log(newData)
 
 
     var count = 0
@@ -63,8 +63,6 @@ function ShowData() {
             var name = usnAndName[1];
             var companies = newData[key];
 
-            // console.log("USN: " + usn);
-            // console.log("Name: " + name);
             count= count+1
 
             code += "<tr style='border: 1px solid black; border-collapse: collapse;'>"+
@@ -79,8 +77,6 @@ function ShowData() {
                 var company = companies[i].company;
                 var offer = companies[i].offer;
                 var campus = companies[i].campus;
-                console.log(company)
-                console.log(offer)
                 if(campus === 'ON' && i!== companies.length - 1){
                     // console.log(campus)
                     companyHtmlOn  += "<td style='border-bottom: 1px solid black;border-right:1px solid ; border-collapse: collapse;'>"+ company +"</td>";
