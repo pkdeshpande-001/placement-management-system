@@ -17,7 +17,7 @@ firebase.database().ref('PlacementStudent').once('value', function (snapshot) {
         obj.usn = childData.usn,
         obj.name = childData.studentName,
         obj.company = childData.company,
-        obj.offer = "offer",
+        obj.offer = childData.offer,
         obj.campus = childData.campus,
         data.push(obj)
 
@@ -84,7 +84,7 @@ function ShowData() {
                 if(campus === 'ON' && i!== companies.length - 1){
                     // console.log(campus)
                     companyHtmlOn  += "<td style='border-bottom: 1px solid black;border-right:1px solid ; border-collapse: collapse;'>"+ company +"</td>";
-                    offerHtmlOn +=  "<td style='border-right:1px solid ;''><a href='"+offer+"'>"+offer+"</a></td>";
+                    offerHtmlOn +=  "<td style='border-right:1px solid ;''><a href='"+offer+"'>"+'offer'+"</a></td>";
                 }
                 if(campus === 'ON' && i== companies.length - 1){
                     // console.log(campus)
