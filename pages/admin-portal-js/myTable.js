@@ -199,16 +199,43 @@ function updateStudentToDataBase(key,offer){
     var inputUsn = document.getElementById("inputUsn").value;
     var inputStudentName = document.getElementById("inputStudentName").value;
     var inputCompany = document.getElementById("inputCompany").value;
-    var inputOfferLetter = document.getElementById("inputOfferLetter").files[0] === undefined ? offer : document.getElementById("inputOfferLetter").files[0];
+    var inputOfferLetter = document.getElementById("inputOfferLetter").files[0]; 
     var inputOnOffCampus = document.getElementById("inputOnOffCampus").value;
     var inutSelectPassoutYear = document.getElementById("inutSelectPassoutYear").value;
+    var urlDownload = offer
+    if(inputOfferLetter !== undefined ) {
+        inputOfferLetter = document.getElementById("inputOfferLetter").files[0];
+        const ref=firebase.storage().ref('StudentDoc');
+        const name=inputCompany+"-"+inputUsn;
+        const metadata={
+          contentType:document.getElementById("inputOfferLetter").files[0].type
+        };
+        const task=ref.child(name).put(inputOfferLetter,metadata);
+        task
+        .then(snapshot => snapshot.ref.getDownloadURL())
+        .then (url =>{ firebase.database().ref().child("PlacementStudent/" + key).update({
+            usn: inputUsn,
+            studentName: inputStudentName,
+            offer: url,
+            key:key,
+            company:inputCompany,
+            campus: inputOnOffCampus,
+            passoutYear: inutSelectPassoutYear
+          }).then(
+            alert('Updated Successfully.\nPlease click on reload button above the table'),
+            document.getElementById("editForm").style.display = "none",
+            document.getElementById("tableBox").style.display = "block"
+          );
+        });
+    } 
+    else{
 
     console.log(key)
 
     firebase.database().ref().child("PlacementStudent/" + key).update({
         usn: inputUsn,
         studentName: inputStudentName,
-        offer: inputOfferLetter,
+        offer: urlDownload,
         key:key,
         company:inputCompany,
         campus: inputOnOffCampus,
@@ -218,6 +245,7 @@ function updateStudentToDataBase(key,offer){
         document.getElementById("editForm").style.display = "none",
         document.getElementById("tableBox").style.display = "block"
       );
+    }
 }
 
  function addCustomerToDataBase(){
