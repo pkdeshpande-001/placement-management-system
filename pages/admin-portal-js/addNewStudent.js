@@ -1,4 +1,5 @@
 function saveAddCustomer(){
+  document.getElementById("spinner").style.display = "block";
   var inputUsn = document.getElementById("inputUsn").value;
   var inputStudentName = document.getElementById("inputStudentName").value;
   var inputCompany = document.getElementById("inputCompany").value;
@@ -34,7 +35,8 @@ function saveAddCustomer(){
           passoutYear: inutSelectPassoutYear
           
         }).then(
-                  alert("Successfully added")
+                  alert("Successfully added"),
+                  document.getElementById("spinner").style.display = "none"
           );
           
 });

@@ -8,6 +8,7 @@ var data = [
     // {'usn':'2BA17IS044', 'name':'Praneet', 'company':'TCS', 'offer':'TCSOfferleter','campus':'on campus'},
     // {'usn':'2BA17IS046', 'name':'Prathamesh', 'company':'Tech Mahindra', 'offer':'TECHOfferleter','campus':'on campus'}
   ];
+  document.getElementById("spinner").style.display = "block";
   var passoutYear = localStorage.getItem('passoutYear')
   document.getElementById("year").innerHTML = passoutYear
 firebase.database().ref('PlacementStudent').once('value', function (snapshot) {
@@ -27,6 +28,7 @@ firebase.database().ref('PlacementStudent').once('value', function (snapshot) {
     });
 }).then(() => {
     ShowData()
+    document.getElementById("spinner").style.display = "none";
     
 })
 
