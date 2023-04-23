@@ -285,7 +285,9 @@ function updateStudentToDataBase(key,offer){
             passoutYear: inutSelectPassoutYear
             
           }).then(
-                    alert("Successfully added")
+                    alert("Successfully added please click on"),
+                    document.getElementById("editForm").style.display = "none",
+                    document.getElementById("tableBox").style.display = "block"
             );
             
   });
