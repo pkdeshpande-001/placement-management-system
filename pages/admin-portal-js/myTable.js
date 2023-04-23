@@ -1,5 +1,7 @@
 var objCustData  = [];
-
+var data1  = [];
+var custObject = {}
+document.getElementById("spinner").style.display = "block";
 $(document).ready(function () {
 
     var data = [
@@ -101,7 +103,7 @@ $(document).ready(function () {
                 }
                }  
             
-                      
+               document.getElementById("spinner").style.display = "none";
                    return CollectRecord;
             }   
           },
@@ -138,13 +140,18 @@ $(document).ready(function () {
                 ).appendTo("#example_wrapper .flex-wrap");
         
          $(".flex-wrap").addClass("pull-right");
+
+         $('#year').change(function () {
+ 
+            table.ajax.reload();
+
+        })
     
 });
 
 var close1 = document.getElementById("close");
     close1.onclick = function () {
-        document.getElementById("editForm").style.display = "none";
-        document.getElementById("tableBox").style.display = "block";
+        closeEditAndShowTable();
     };
 
 function openAddModelAndClose(data) {
@@ -157,15 +164,13 @@ function openAddModelAndClose(data) {
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = function (event) {
         if (event.target == document.getElementById("editForm")) {
-            document.getElementById("editForm").style.display = "none";
-            document.getElementById("tableBox").style.display = "block";
+            closeEditAndShowTable();
         }
     };
 }
 
 function cancle(){
-    document.getElementById("editForm").style.display = "none";
-    document.getElementById("tableBox").style.display = "block";
+    closeEditAndShowTable();
 }
 
 function updateInputBoxFromFireBase(data){
@@ -173,11 +178,11 @@ function updateInputBoxFromFireBase(data){
     document.getElementById("tableBox").style.display = "none";
     window.onclick = function (event) {
         if (event.target == document.getElementById("editForm")) {
-            document.getElementById("editForm").style.display = "none";
-            document.getElementById("tableBox").style.display = "block";
+            closeEditAndShowTable();
         }
     };
-    var data1 = data[0]
+    data1 = data[0]
+    console.log(data1)
     document.getElementById("inputUsn").value = data1[0];
     document.getElementById("inputStudentName").value = data1[1];
     document.getElementById("inputCompany").value = data1[2];
@@ -186,16 +191,20 @@ function updateInputBoxFromFireBase(data){
     document.getElementById("inputOnOffCampus").value = data1[4];
     document.getElementById("inutSelectPassoutYear").options.namedItem(""+data1[5]+"").selected = true ;
     document.getElementById("inutSelectPassoutYear").value = data1[5];
-    const custObject = objCustData.find(obj => obj.usn === data1[0] && obj.company === data1[2] && obj.campus === data1[4] && obj.passoutYear == data1[5] );
+    
         // updateStudent(custObject.key);
         // console.log(custObject.key)
-        document.getElementById('saveUpdateCustomer').addEventListener('click', () => {
-            updateStudentToDataBase(custObject.key,custObject.offer);
-        })
     
 }
 
+document.getElementById('saveUpdateCustomer').addEventListener('click', () => {
+    custObject = objCustData.find(obj => obj.usn === data1[0] && obj.company === data1[2] && obj.campus === data1[4] && obj.passoutYear == data1[5] );
+    console.log(custObject)
+    updateStudentToDataBase(custObject.key,custObject.offer);
+})
+
 function updateStudentToDataBase(key,offer){
+    document.getElementById("spinner").style.display = "block";
     var inputUsn = document.getElementById("inputUsn").value;
     var inputStudentName = document.getElementById("inputStudentName").value;
     var inputCompany = document.getElementById("inputCompany").value;
@@ -204,6 +213,7 @@ function updateStudentToDataBase(key,offer){
     var inutSelectPassoutYear = document.getElementById("inutSelectPassoutYear").value;
     var urlDownload = offer
     if(inputOfferLetter !== undefined ) {
+        document.getElementById("spinner").style.display = "block";
         inputOfferLetter = document.getElementById("inputOfferLetter").files[0];
         const ref=firebase.storage().ref('StudentDoc');
         const name=inputCompany+"-"+inputUsn;
@@ -222,15 +232,15 @@ function updateStudentToDataBase(key,offer){
             campus: inputOnOffCampus,
             passoutYear: inutSelectPassoutYear
           }).then(
-            alert('Updated Successfully.\nPlease click on reload button above the table'),
-            document.getElementById("editForm").style.display = "none",
-            document.getElementById("tableBox").style.display = "block"
+            alert('Updated Successfully.\n PLease click on reload button above table'),
+            closeEditAndShowTable()
           );
         });
     } 
     else{
 
     console.log(key)
+    document.getElementById("spinner").style.display = "block",
 
     firebase.database().ref().child("PlacementStudent/" + key).update({
         usn: inputUsn,
@@ -241,14 +251,14 @@ function updateStudentToDataBase(key,offer){
         campus: inputOnOffCampus,
         passoutYear: inutSelectPassoutYear
       }).then(
-        alert('Updated Successfully.\nPlease click on reload button above the table'),
-        document.getElementById("editForm").style.display = "none",
-        document.getElementById("tableBox").style.display = "block"
+        alert('Updated Successfully.\n PLease click on reload button above table'),
+        closeEditAndShowTable()
       );
     }
 }
 
  function addCustomerToDataBase(){
+    document.getElementById("spinner").style.display = "block";
     var inputUsn = document.getElementById("inputUsn").value;
     var inputStudentName = document.getElementById("inputStudentName").value;
     var inputCompany = document.getElementById("inputCompany").value;
@@ -285,13 +295,18 @@ function updateStudentToDataBase(key,offer){
             passoutYear: inutSelectPassoutYear
             
           }).then(
-                    alert("Successfully added please click on"),
-                    document.getElementById("editForm").style.display = "none",
-                    document.getElementById("tableBox").style.display = "block"
+                    confirm("Updated Successfully.\n PLease click on reload button above table"),
+                    closeEditAndShowTable()
             );
             
   });
     
     
     
+}
+
+function closeEditAndShowTable() {
+    document.getElementById("spinner").style.display = "none";
+    document.getElementById("editForm").style.display = "none";
+    document.getElementById("tableBox").style.display = "block";
 }

@@ -1,5 +1,5 @@
 function login() {
-    // document.getElementById("myNav").style.display = "block"
+    // document.getElementById("spinner").style.display = "block",
     
     // var emails = document.getElementById("email").value;
     // var passor = document.getElementById("password").value;
@@ -33,6 +33,7 @@ function login() {
     //     console.log(errorCode + " : " + errorMessage);
     //     msg.style.display = "block";
     //     alertText.innerHTML = errorMessage;
+    //     document.getElementById("spinner").style.display = "none";
     //   });
     
   
