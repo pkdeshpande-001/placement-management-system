@@ -1,6 +1,9 @@
 var objCustData  = [];
-var data1  = [];
-var custObject = {}
+var addData  = [];
+var updateData  = [];
+var deleteData = {}
+var msg = document.getElementById("alert");
+var alertText = document.getElementById("alertText")
 document.getElementById("spinner").style.display = "block";
 $(document).ready(function () {
 
@@ -29,8 +32,11 @@ $(document).ready(function () {
                     {
                         text: 'Add',
                         action: function ( e, dt, node, config) {
-                                
-                                openAddModelAndClose(data);
+                            var data = table.rows('.selected').data();
+                                addData = []
+                                document.getElementById("saveNewCustomer").style.display = "block"
+                                updateInputBoxFromFireBase(data[0]);
+                                // openAddModelAndClose();
                             }
                     },
                     {
@@ -38,10 +44,25 @@ $(document).ready(function () {
                     action: function ( e, dt, node, config) {
                             var data = table.rows('.selected').data();
                             if(data[0]){
-                                updateInputBoxFromFireBase(data);
+                                updateData = []
+                                document.getElementById("saveUpdateCustomer").style.display = "block"
+                                updateInputBoxFromFireBase(data[0]);
                             }
                         }
                     },
+                    {
+                        text: 'Delete',
+                        action: function ( e, dt, node, config) {
+                                var data = table.rows('.selected').data();
+                                var data2=[]
+                                if(data[0]){
+                                    data2 = data[0]
+                                    deleteData = objCustData.find(obj => obj.usn === data2[0] && obj.company === data2[2] && obj.campus === data2[4] && obj.passoutYear == data2[5]);
+                                    console.log(deleteData)
+                                    firebase.database().ref('PlacementStudent/'+deleteData.key).remove().then(alert(data2[0]+" "+data2[2]+" Deleted Successfully"))
+                                }
+                            }
+                        },
                     {
                         text: 'Reload',
                         action: function ( e, dt, node, config ) {
@@ -154,26 +175,24 @@ var close1 = document.getElementById("close");
         closeEditAndShowTable();
     };
 
-function openAddModelAndClose(data) {
-    document.getElementById("editForm").style.display = "block";
-    document.getElementById("tableBox").style.display = "none";
-    
-    document.getElementById('saveUpdateCustomer').addEventListener('click', () => {
-        addCustomerToDataBase()
-    })
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function (event) {
-        if (event.target == document.getElementById("editForm")) {
-            closeEditAndShowTable();
-        }
-    };
-}
+// function openAddModelAndClose(data) {
+//     document.getElementById("editForm").style.display = "block";
+//     document.getElementById("tableBox").style.display = "none";
+//     // When the user clicks anywhere outside of the modal, close it
+//     window.onclick = function (event) {
+//         if (event.target == document.getElementById("editForm")) {
+//             closeEditAndShowTable();
+//         }
+//     };
+// }
+
+
 
 function cancle(){
     closeEditAndShowTable();
 }
 
-function updateInputBoxFromFireBase(data){
+function updateInputBoxFromFireBase(dataUpdateOrAdd){
     document.getElementById("editForm").style.display = "block";
     document.getElementById("tableBox").style.display = "none";
     window.onclick = function (event) {
@@ -181,26 +200,28 @@ function updateInputBoxFromFireBase(data){
             closeEditAndShowTable();
         }
     };
-    data1 = data[0]
-    console.log(data1)
-    document.getElementById("inputUsn").value = data1[0];
-    document.getElementById("inputStudentName").value = data1[1];
-    document.getElementById("inputCompany").value = data1[2];
-    console.log(data1[4])
-    document.getElementById("inputOnOffCampus").options.namedItem(""+data1[4]+"").selected = true;
-    document.getElementById("inputOnOffCampus").value = data1[4];
-    document.getElementById("inutSelectPassoutYear").options.namedItem(""+data1[5]+"").selected = true ;
-    document.getElementById("inutSelectPassoutYear").value = data1[5];
-    
-        // updateStudent(custObject.key);
-        // console.log(custObject.key)
-    
+    addData = dataUpdateOrAdd;
+    updateData = dataUpdateOrAdd;
+    if(Array.isArray(dataUpdateOrAdd) && dataUpdateOrAdd.length){
+    document.getElementById("inputUsn").value = dataUpdateOrAdd[0];
+    document.getElementById("inputStudentName").value = dataUpdateOrAdd[1];
+    document.getElementById("inputCompany").value = dataUpdateOrAdd[2];
+    console.log(dataUpdateOrAdd[4])
+    document.getElementById("inputOnOffCampus").options.namedItem(""+dataUpdateOrAdd[4]+"").selected = true;
+    document.getElementById("inputOnOffCampus").value = dataUpdateOrAdd[4];
+    document.getElementById("inutSelectPassoutYear").options.namedItem(""+dataUpdateOrAdd[5]+"").selected = true ;
+    document.getElementById("inutSelectPassoutYear").value = dataUpdateOrAdd[5];
+    }
 }
 
+document.getElementById('saveNewCustomer').addEventListener('click', () => {
+    addCustomerToDataBase()
+})
+
 document.getElementById('saveUpdateCustomer').addEventListener('click', () => {
-    custObject = objCustData.find(obj => obj.usn === data1[0] && obj.company === data1[2] && obj.campus === data1[4] && obj.passoutYear == data1[5] );
+    var custObject = objCustData.find(obj => obj.usn === updateData[0] && obj.company === updateData[2] && obj.campus === updateData[4] && obj.passoutYear == updateData[5] );
     console.log(custObject)
-    updateStudentToDataBase(custObject.key,custObject.offer);
+    updateStudentToDataBase(custObject.key, custObject.offer);
 })
 
 function updateStudentToDataBase(key,offer){
@@ -233,8 +254,16 @@ function updateStudentToDataBase(key,offer){
             passoutYear: inutSelectPassoutYear
           }).then(
             alert('Updated Successfully.\n PLease click on reload button above table'),
+            document.getElementById("saveUpdateCustomer").style.display = "none",
             closeEditAndShowTable()
-          );
+          ).catch(function (error) {
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                console.log(errorCode + " : " + errorMessage);
+                msg.style.display = "block";
+                alertText.innerHTML = errorMessage;
+                document.getElementById("spinner").style.display = "none";
+              });
         });
     } 
     else{
@@ -253,7 +282,14 @@ function updateStudentToDataBase(key,offer){
       }).then(
         alert('Updated Successfully.\n PLease click on reload button above table'),
         closeEditAndShowTable()
-      );
+      ).catch(function (error) {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        console.log(errorCode + " : " + errorMessage);
+        msg.style.display = "block";
+        alertText.innerHTML = errorMessage;
+        document.getElementById("spinner").style.display = "none";
+      });;
     }
 }
 
@@ -266,9 +302,12 @@ function updateStudentToDataBase(key,offer){
     var inputOnOffCampus = document.getElementById("inputOnOffCampus").value;
     var inutSelectPassoutYear = document.getElementById("inutSelectPassoutYear").value;
     
-    
+    if(inputCompany===undefined || inputOfferLetter === undefined || inputOnOffCampus === undefined || inutSelectPassoutYear === undefined){
+        msg.style.display = "block";
+        alertText.innerHTML = "Please provide all the details";
+        document.getElementById("spinner").style.display = "none";
+    } else{
     // console.log(key)
-
     var offerUrl;
     const ref=firebase.storage().ref('StudentDoc');
     // document.getElementById("cv").files[0];
@@ -296,10 +335,19 @@ function updateStudentToDataBase(key,offer){
             
           }).then(
                     confirm("Updated Successfully.\n PLease click on reload button above table"),
+                    document.getElementById('saveNewCustomer').style.display = "none",
                     closeEditAndShowTable()
-            );
+            ).catch(function (error) {
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                console.log(errorCode + " : " + errorMessage);
+                msg.style.display = "block";
+                alertText.innerHTML = errorMessage;
+                document.getElementById("spinner").style.display = "none";
+              });;
             
   });
+}
     
     
     
@@ -309,4 +357,7 @@ function closeEditAndShowTable() {
     document.getElementById("spinner").style.display = "none";
     document.getElementById("editForm").style.display = "none";
     document.getElementById("tableBox").style.display = "block";
+    document.getElementById("saveNewCustomer").style.display = "none";
+    document.getElementById("saveUpdateCustomer").style.display = "none";
+    document.getElementById("myForm").reset();
 }

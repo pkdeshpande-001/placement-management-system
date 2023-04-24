@@ -208,6 +208,12 @@
   cursor: pointer;
 }
           </style>
+          <div class="alert alert-danger alert-dismissible text-white" role="alert" id="alert" style="display: none;">
+            <span class="text-sm" id="alertText" id="alertText">Alert Message</span>
+            <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
           <div class="card mb-4 mt-4" id="editForm" style="display: none; ">
             <span class="close" id="close">&times;</span>
             <div class="card-body" style="margin-top: 2%;">
@@ -288,7 +294,8 @@
                         <label class="small mb-1" for="inputLocation">Location</label>
                         <input class="form-control" id="address" type="email" placeholder="Enter your location" >
                     </div> -->
-                    <button class="btn btn-primary" type="button" id="saveUpdateCustomer">Save changes</button>
+                    <button class="btn btn-primary" type="button" id="saveNewCustomer" style="display: none;">Save New Data</button>
+                    <button class="btn btn-primary" type="button" id="saveUpdateCustomer" style="display: none">Save changes</button>
                     <button class="btn btn-primary" type="button" onclick="cancle()">Cancle</button>
                 </form>
             </div>
