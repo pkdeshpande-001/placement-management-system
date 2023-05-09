@@ -86,6 +86,12 @@ $(document).ready(function () {
                     $(nTd).html("<a href='"+oData[3]+"' target='_blank'>"+"Offer Letter"+"</a>");
                 } 
             },
+            { 
+                title: 'Exprience letter',
+                "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+                    $(nTd).html("<a href='"+oData[4]+"' target='_blank'>"+"Exprience Letter"+"</a>");
+                } 
+            },
             { title: 'ON/OFF Campus' },
             { title: 'Year' }
         ],
@@ -106,6 +112,7 @@ $(document).ready(function () {
                     obj.studentName = innerData['studentName']
                     obj.company = innerData['company']
                     obj.offer = innerData['offer']
+                    obj.exp = innerData['exp']
                     obj.campus = innerData['campus']
                     obj.passoutYear = innerData['passoutYear']
                     obj.key = innerData['key']
@@ -118,6 +125,7 @@ $(document).ready(function () {
                     fullData.push(innerData['studentName'])
                     fullData.push(innerData['company'])
                     fullData.push(innerData['offer'])
+                    fullData.push(innerData['exp'])
                     fullData.push(innerData['campus'])
                     fullData.push(innerData['passoutYear'])
                     CollectRecord.push(fullData) 
