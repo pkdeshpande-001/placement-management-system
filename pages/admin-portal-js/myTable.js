@@ -96,7 +96,7 @@ $(document).ready(function () {
             { title: 'Year' }
         ],
         ajax: {
-            "url": "https://student-lms-5740d-default-rtdb.firebaseio.com/PlacementStudent.json",
+            "url": "https://student-placement-fa18a-default-rtdb.firebaseio.com/PlacementStudent.json",
             "dataSrc": function (data,callback, settings) {
                 
                 var data = Object.values(data);
