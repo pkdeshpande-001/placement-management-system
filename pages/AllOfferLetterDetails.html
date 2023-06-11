@@ -228,13 +228,13 @@
                     <div class="row gx-3 mb-3">
                       <!-- Form Group (first name)-->
                       <div class="col-md-6">
-                          <label class="small mb-1" for="inputUsn">USN</label>
-                          <input class="form-control" id="inputUsn" type="text" placeholder="Enter USN" >
+                          <label class="small mb-1" for="inputUsn" readonly>USN (Non - Editable) </label>
+                          <input class="form-control" id="inputUsn" readonly type="text" placeholder="Enter USN" >
                       </div>
                       <!-- Form Group (last name)-->
                       <div class="col-md-6">
-                        <label class="small mb-1" for="inputStudentName">Student Name</label>
-                        <input class="form-control" id="inputStudentName" type="tel" placeholder="Enter Student Name">
+                        <label class="small mb-1" for="inputStudentName" readonly>Student Name (Non - Editable)</label>
+                        <input class="form-control" id="inputStudentName" readonly type="tel" placeholder="Enter Student Name">
                     </div>
                   </div>
                     <!-- Form Row-->
@@ -248,6 +248,7 @@
                             <label class="small mb-1" for="inputOfferLetter">Offer Letter</label>
                             <input class="form-control" id="inputOfferLetter" type="file" placeholder=" Upload Offer Letter" >
                         </div>
+                        
                         <!-- Form Group (last name)-->
                         
                         
@@ -261,6 +262,7 @@
                           <option id="OFF">OFF</option>
                         </Select>
                     </div>
+                    
                       <!-- Form Group (last name)-->
                       <div class="col-md-6">
                           <label class="small mb-1" for="inutSelectPassoutYear">Passout Year</label>
@@ -290,11 +292,15 @@
                             <label class="small mb-1" for="inputEmailAddress">Email address</label>
                             <input class="form-control" id="inputEmailAddress" type="text" placeholder="Enter your Email address">
                         </div>
+                    </div>-->
+                    <div class="row gx-3 mb-3">
+                      <div class="col-md-6">
+                        <label class="small mb-1" for="inputExpLetter">Exprience Letter</label>
+                        <input class="form-control" id="inputExpLetter" type="file" placeholder="Upload Exprience Letter" >
                     </div>
-                    <div class="mb-3">
-                        <label class="small mb-1" for="inputLocation">Location</label>
-                        <input class="form-control" id="address" type="email" placeholder="Enter your location" >
-                    </div> -->
+                        
+                        
+                    </div>
                     <button class="btn btn-primary" type="button" id="saveNewCustomer" style="display: none;">Save New Data</button>
                     <button class="btn btn-primary" type="button" id="saveUpdateCustomer" style="display: none">Save changes</button>
                     <button class="btn btn-primary" type="button" onclick="cancle()">Cancle</button>
