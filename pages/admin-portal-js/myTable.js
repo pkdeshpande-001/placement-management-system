@@ -33,11 +33,13 @@ $(document).ready(function () {
                         text: 'Add',
                         action: function ( e, dt, node, config) {
                             var data = table.rows('.selected').data();
+                            if(data[0]){
                                 addData = []
                                 document.getElementById("saveNewCustomer").style.display = "block"
                                 updateInputBoxFromFireBase(data[0]);
                                 // openAddModelAndClose();
                             }
+                        }
                     },
                     {
                     text: 'Edit',
@@ -57,9 +59,14 @@ $(document).ready(function () {
                                 var data2=[]
                                 if(data[0]){
                                     data2 = data[0]
-                                    deleteData = objCustData.find(obj => obj.usn === data2[0] && obj.company === data2[2] && obj.campus === data2[4] && obj.passoutYear == data2[5]);
+                                    console.log(data2)
+                                    console.log(data2[0]+" "+data2[2]+" "+data2[4]+" "+data2[5])
+                                    deleteData = objCustData.find(obj => obj.usn === data2[0] && obj.company === data2[2] && obj.campus === data2[5] && obj.passoutYear == data2[6]);
                                     console.log(deleteData)
-                                    firebase.database().ref('PlacementStudent/'+deleteData.key).remove().then(alert(data2[0]+" "+data2[2]+" Deleted Successfully"))
+                                    var promise = []
+                                    promise.push(deleteData1(data2,deleteData))
+                                    Promise.all(promise).then(dt.ajax.reload())
+                                    
                                 }
                             }
                         },
@@ -89,7 +96,8 @@ $(document).ready(function () {
             { 
                 title: 'Exprience letter',
                 "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
-                    $(nTd).html("<a href='"+oData[4]+"' target='_blank'>"+"Exprience Letter"+"</a>");
+                    var data = oData[4] === null ? "null" : oData[4]
+                    $(nTd).html("<a href='"+data+"' target='_blank'>"+"Exprience Letter"+"</a>");
                 } 
             },
             { title: 'ON/OFF Campus' },
@@ -108,24 +116,25 @@ $(document).ready(function () {
                     var obj = {}
                     var fullData = []
                     var innerData = data[i]
+                    var expData = innerData['exp'] === undefined ? "null" : innerData['exp'];
                     obj.usn = innerData['usn']
                     obj.studentName = innerData['studentName']
                     obj.company = innerData['company']
                     obj.offer = innerData['offer']
-                    obj.exp = innerData['exp']
+                    obj.exp = expData
                     obj.campus = innerData['campus']
                     obj.passoutYear = innerData['passoutYear']
                     obj.key = innerData['key']
                     objCustData.push(obj)
 
                     if(innerData['passoutYear'] == pass || pass === 'All'){
-
+                       
                         
                     fullData.push(innerData['usn'])
                     fullData.push(innerData['studentName'])
                     fullData.push(innerData['company'])
                     fullData.push(innerData['offer'])
-                    fullData.push(innerData['exp'])
+                    fullData.push(expData)
                     fullData.push(innerData['campus'])
                     fullData.push(innerData['passoutYear'])
                     CollectRecord.push(fullData) 
@@ -178,6 +187,8 @@ $(document).ready(function () {
     
 });
 
+
+
 var close1 = document.getElementById("close");
     close1.onclick = function () {
         closeEditAndShowTable();
@@ -194,7 +205,9 @@ var close1 = document.getElementById("close");
 //     };
 // }
 
-
+function deleteData1(data2,deleteData) {
+    firebase.database().ref('PlacementStudent/'+deleteData.key).remove().then(alert(data2[0]+" "+data2[2]+" Deleted Successfully"))
+}
 
 function cancle(){
     closeEditAndShowTable();
@@ -215,10 +228,10 @@ function updateInputBoxFromFireBase(dataUpdateOrAdd){
     document.getElementById("inputStudentName").value = dataUpdateOrAdd[1];
     document.getElementById("inputCompany").value = dataUpdateOrAdd[2];
     console.log(dataUpdateOrAdd[4])
-    document.getElementById("inputOnOffCampus").options.namedItem(""+dataUpdateOrAdd[4]+"").selected = true;
-    document.getElementById("inputOnOffCampus").value = dataUpdateOrAdd[4];
-    document.getElementById("inutSelectPassoutYear").options.namedItem(""+dataUpdateOrAdd[5]+"").selected = true ;
-    document.getElementById("inutSelectPassoutYear").value = dataUpdateOrAdd[5];
+    document.getElementById("inputOnOffCampus").options.namedItem(""+dataUpdateOrAdd[5]+"").selected = true;
+    document.getElementById("inputOnOffCampus").value = dataUpdateOrAdd[5];
+    document.getElementById("inutSelectPassoutYear").options.namedItem(""+dataUpdateOrAdd[6]+"").selected = true ;
+    document.getElementById("inutSelectPassoutYear").value = dataUpdateOrAdd[6];
     }
 }
 
@@ -227,7 +240,7 @@ document.getElementById('saveNewCustomer').addEventListener('click', () => {
 })
 
 document.getElementById('saveUpdateCustomer').addEventListener('click', () => {
-    var custObject = objCustData.find(obj => obj.usn === updateData[0] && obj.company === updateData[2] && obj.campus === updateData[4] && obj.passoutYear == updateData[5] );
+    var custObject = objCustData.find(obj => obj.usn === updateData[0] && obj.company === updateData[2] && obj.campus === updateData[5] && obj.passoutYear == updateData[6] );
     console.log(custObject)
     updateStudentToDataBase(custObject.key, custObject.offer);
 })
